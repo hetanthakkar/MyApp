@@ -1,12 +1,16 @@
-
 import * as React from 'react';
-import { Dimensions,TextInput,TouchableOpacity,Text, View, StyleSheet,YellowBox } from 'react-native';
+import { Dimensions,TextInput,TouchableOpacity,Text, View, StyleSheet,YellowBox,TouchableWithoutFeedback,Keyboard } from 'react-native';
 import RadioForm from 'react-native-simple-radio-button';
 import { Picker } from 'react-native-picker-dropdown';
 import firebase from 'firebase';
 import _ from 'lodash';
 YellowBox.ignoreWarnings(['Setting a timer']);
 const _console = _.clone(console);
+const  DismissKeyboard=({children})=>(
+  <TouchableWithoutFeedback onPress={()=>Keyboard.dismiss()}>{children}</TouchableWithoutFeedback>
+);
+
+
 console.warn = message => {
   if (message.indexOf('Setting a timer') <= -1) {
     _console.warn(message);
@@ -160,22 +164,22 @@ constructor (props) {
     }  
   render () { 
     return (
-      <View style={styles.container}>
 
-      <Text>{'\n'}{'\n'}{'\n'}{'\n'}</Text>
-      <Text style={{color:'red', textAlign:'center'}}>
-      {this.state.number}
-      </Text>
+      <View style={styles.container}>
+      <Text>{'\n'}{'\n'}{'\n'}{'\n'}{'\n'}{'\n'}</Text>
+      <Text style={{color:'white',fontSize:33,fontWeight:'bold',fontVariant:'initial',width:screenWidth*100,left:screenWidth*10,top:screenHeight*-2}}>Sign Up To Get Started</Text>
       <Text></Text>
       <TextInput
       placeholder="Name"
+      placeholderTextColor="white"
       style={styles.myText}
       onChangeText={
-        fname => this.setState({fname})
+        fname => this.setState({fname})  
       }
       />
       <TextInput
       placeholder="Email Id"
+      placeholderTextColor="white"
       style={styles.myText}
       onChangeText={
         email => this.setState({email})
@@ -184,6 +188,7 @@ constructor (props) {
 
       <TextInput
       placeholder="Password"
+      placeholderTextColor="white"
       style={styles.myText}
       secureTextEntry={true}  
       onChangeText={
@@ -192,6 +197,7 @@ constructor (props) {
       />
       <TextInput
       placeholder="Re-enter Password"
+      placeholderTextColor="white"
       style={styles.myText}
       secureTextEntry={true}  
       onChangeText={
@@ -199,7 +205,7 @@ constructor (props) {
         }
       }
       />
-
+      <Text></Text>
 
       <RadioForm
       style={styles.button}
@@ -207,10 +213,11 @@ constructor (props) {
       formHorizontal={true}
       labelHorizontal={true}
       radio_props={radio_props}
+      labelStyle={{fontSize: 20, color: 'white'}}
       initial={-1}
       onPress={(value) => {this.setState({gender:value})}}
-        />
-         
+        >
+        </RadioForm>
          <Picker
           selectedValue={this.state.state}
           onValueChange={this.handleValueChange}
@@ -246,21 +253,28 @@ onValueChange={(itemValue) =>
           </Picker>
        
       <Text></Text>
+      <Text></Text>
+      <Text></Text>
+      <Text></Text>
+      <Text></Text>
+      <Text></Text>
+      <Text></Text>
     <TouchableOpacity 
       onPress={() => this.submit()}
         style={{
           width: '40%',
-          borderRadius: 8,
-          backgroundColor: 'red', 
+          borderRadius: 9,
+          backgroundColor: '#fb5b5a', 
           left:screenWidth/49,
-          top:screenHeight*0.08,
+          top:screenHeight*-18,
           height:'8%',
         }}>
         
         <Text style={{ color: 'white', fontWeight: 'bold',textAlign:'center',fontSize:30,textAlignVertical: "center" }}>
-          Submit
+          Sign Up
         </Text>
-    </TouchableOpacity>     
+    </TouchableOpacity>  
+  
       </View>
     );
   }
@@ -268,19 +282,22 @@ onValueChange={(itemValue) =>
 
 const styles = StyleSheet.create({
   pickerText:{
-    width:screenWidth*100, 
+    width:screenWidth*100,
+    color:'white' 
   },
   button:{
-    left:screenWidth*-28,
+    left:screenWidth*-22,
   },
   container: {
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: '#e1e6ec',
+    backgroundColor: '#003f5c',
   },
   myText:{
+    color:'white',
     borderWidth:1.2,borderColor:'#d6d0cf',
-    margin:10, padding:10, width:'95%'
+    margin:10, padding:10, width:'95%',borderRadius:12,
+
   },
   
 });
