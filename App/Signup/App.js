@@ -1,19 +1,10 @@
+
 import * as React from 'react';
-import { Dimensions } from 'react-native';
-import RadioForm, {RadioButton, RadioButtonInput, RadioButtonLabel} from 'react-native-simple-radio-button';
-import * as Facebook from 'expo-facebook';
-import {Alert, Text, View, StyleSheet } from 'react-native';
-import Constants from 'expo-constants';
-import {
-  Platform,TextInput,Button,
-  TouchableOpacity,Keyboard
-} from 'react-native';
+import { Dimensions,TextInput,TouchableOpacity,Text, View, StyleSheet,YellowBox } from 'react-native';
+import RadioForm from 'react-native-simple-radio-button';
 import { Picker } from 'react-native-picker-dropdown';
 import firebase from 'firebase';
-import { YellowBox } from 'react-native';
 import _ from 'lodash';
-var fetch_name="initial"
-var fetch_email="initial"
 YellowBox.ignoreWarnings(['Setting a timer']);
 const _console = _.clone(console);
 console.warn = message => {
@@ -21,7 +12,7 @@ console.warn = message => {
     _console.warn(message);
   }
 };
-const id= "624444824968451";
+var fetch_name="initial"
 var radio_props = [
   {label: 'Male    ', value:"Male" },
   {label: 'Female', value:"Female"}
@@ -30,8 +21,7 @@ var cid =1
 const screenWidth = Math.round(Dimensions.get('window').width)/100;
 const screenHeight = Math.round(Dimensions.get('window').height)/100;
 export default class App extends React.Component {
-    
- 
+  
   getCities =  ()=>{
   if(this.state.state=="Gujarat")
    return ["Enter City","Ahmedabad","Anand","Bhavnagar","Gandhinagar","Jamnagar","Rajkot","Surat","Vadodara"].map(citi => <Picker.Item label={citi} value={citi} />)
@@ -59,83 +49,90 @@ export default class App extends React.Component {
     return  <Picker.Item label="Enter City" value="" />
 }
   submit=async () =>{
-  const {fname,lname,password,state,citi} = this.state;
+  const {fname,email,password,state,number} = this.state;
     var tempo=cid
  
   if(fname==""){
     this.setState({Error: 'Please enter your name'});
   }
-  
-  else if(lname==""){
+  if(number.length!=10){
+    this.setState({Error: 'Phone number should be of 10 digits'});
+  }
+ 
+   if(email==""){
       this.setState({Error: 'Please enter your Email'});
   }   
-  else if(password==""){
+   if(password==""){
     this.setState({Error: 'please fill the password'});
   }
-  else if(password.length <5){
+   if(password.length <5){
     this.setState({Error: 'Password  must be more than 5'});
   }
-else if(state==""){
+ if(state==""){
     this.setState({Error: 'Please enter your state'});
-  }
-  else{
-    this.setState({Error: 'thank you, your form is submitted successfully'});
   }
   for(let k=1;k<=tempo;k++){ 
     
+    
     console.log("entered for loop")
-     firebase.database().ref('user/'+k).on('value',  (snapshot) => {
+    firebase.database().ref('user/'+k).on('value',  (snapshot) => {
  fetch_name = snapshot.val().name;
- fetch_email=snapshot.valu().email;
+ fetch_email=snapshot.val().email;
 console.log("fetch name is "+snapshot.val().name)
 console.log("state name is "+this.state.fname)
-if(fetch_name==this.state.fname||fetch_email==this.state.email){
+if(fetch_name==this.state.fname){
  console.log("entered if")
 console.log("fetch name is "+fetch_name)
 console.log("state name is "+this.state.fname)
 this.setState({seen:1})
+this.setState({Error: 'Email id /username already exists'})
 }
 else{
  this.setState({seen:0})
- 
- if(this.state.flag===1&&this.state.error==""){
+}
+console.log("error is "+this.state.error)
+})}
+ if(this.state.error==""){
+   var em=this.state.email
+   var ps= this.state.password
+  firebase.auth()
+  .createUserWithEmailAndPassword(em,ps)
+  .then(() => console.log("success"))
+  .catch(error => console.log(error))
+
+   console.log("entered second if")
  firebase.database().ref('user/'+cid).set(
-   {
-     name:this.state.fname,
-     email:this.state.email,
-     password:this.state.password,
-     state:this.state.state,
-     city:this.state.citi,
-     gender:this.state.gender,
-   }
- )  
- 
+    {
+      number:this.state.number,
+      name: this.state.fname,
+      email: this.state.email,
+      password: this.state.password,
+      state: this.state.state,
+      city: this.state.citi,
+      gender: this.state.gender
+    }
+  )  
  this.setState({flag:0})
  cid++;
+ this.setState({Error: 'Form Submitted succesfully'});
+console.log("about to exit")
 }
-}
-});
-  
-}
+console.log("exited finally")
 
- if(this.state.seen !=0){
- this.setState({Error: 'username/email already exist'});
-}
- 
 }
 componentDidMount(){
 
   var firebaseConfig = {
-    apiKey: "AIzaSyBeVVW7Dxo_CYvKx-gG8tAuqL-OSbZM6h8",
-    authDomain: "random-7745a.firebaseapp.com",
-    databaseURL: "https://random-7745a.firebaseio.com",
-    projectId: "random-7745a",
-    storageBucket: "random-7745a.appspot.com",
-    messagingSenderId: "936317365417",
-    appId: "1:936317365417:web:b388db0a3c99c432554db8",
-    measurementId: "G-Y3868DK5YT"
-  };
-  this.setState({fname:"",flag:1});
+    apiKey: "AIzaSyAfGN94rWhA55dceve-ab5R5nEL6o4xXeg",
+    authDomain: "new1-930be.firebaseapp.com",
+    databaseURL: "https://new1-930be.firebaseio.com",
+    projectId: "new1-930be",
+    storageBucket: "new1-930be.appspot.com",
+    messagingSenderId: "332990256430",
+    appId: "1:332990256430:web:640a6413492c34bf2a96bf",
+    measurementId: "G-SBPS6449GM"
+    };
+     this.setState({fname:"",flag:1});
 
   if (!firebase.apps.length) {
     firebase.initializeApp(firebaseConfig);
@@ -146,12 +143,12 @@ componentDidMount(){
 constructor (props) {
     super(props);
     this.state = {  fname:'',gender:'',seen:0,
-      email:'', password:'', state: '',citi:'',flag:0 };
+      email:'', password:'', state: '',citi:'',flag:0 ,error:"",number:0};
   }
-     handleValueChange=(state) =>{
+  handleValueChange=(state) =>{
     this.setState({ state })
     this.setState({ citi:""})  
-    (this.state.state)
+    console.log(this.state.state)
   }
   handleCityChange=(state) =>{
     this.setState({ citi})  
@@ -160,15 +157,14 @@ constructor (props) {
     updateciti=(value)=>{
       console.log("enters")
       this.setState({citi:value})
-    }
-    
+    }  
   render () { 
     return (
       <View style={styles.container}>
 
       <Text>{'\n'}{'\n'}{'\n'}{'\n'}</Text>
       <Text style={{color:'red', textAlign:'center'}}>
-      {this.state.Error}
+      {this.state.number}
       </Text>
       <Text></Text>
       <TextInput
@@ -178,7 +174,6 @@ constructor (props) {
         fname => this.setState({fname})
       }
       />
-
       <TextInput
       placeholder="Email Id"
       style={styles.myText}
@@ -277,7 +272,6 @@ const styles = StyleSheet.create({
   },
   button:{
     left:screenWidth*-28,
-    padding:10,
   },
   container: {
     justifyContent: 'center',
